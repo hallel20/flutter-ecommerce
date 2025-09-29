@@ -1,2 +1,58 @@
-node_modules/
+# Miscellaneous
+.DS_Store
 .env
+
+# Build/Generated files
+/build/
+/ios/Flutter/.last_build_id
+/android/.gradle
+/android/local.properties
+/android/key.properties
+/android/.idea
+/ios/.swift-version
+/ios/.symlinks
+/ios/Flutter/ephemeral
+/ios/Pods/
+/ios/.generated-include
+/ios/DerivedData
+/macos/Flutter/ephemeral
+/macos/build/
+/linux/flutter/ephemeral
+/windows/flutter/ephemeral
+/web/
+
+# Dart/Flutter
+.dart_tool/
+.packages
+.flutter-plugins
+.flutter-plugins-dependencies
+.idea/
+.vscode/
+
+# IDE files
+# IntelliJ/Android Studio
+*.iml
+*.iws
+*.ipr
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/vcs.xml
+.idea/gradle.xml
+.idea/libraries
+
+# VS Code specific files
+.vscode/settings.json
+.vscode/tasks.json
+.vscode/launch.json
+
+# Test/Coverage reports
+/coverage/
+
+# Local dependencies
+/pubspec.lock
+/test/
+
+# Secrets and credentials (if any)
+# You should typically use environment variables or a secure vault for secrets.
+# If you must ignore a local secrets file, add it here.
+# *.secret
