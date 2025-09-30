@@ -1,5 +1,4 @@
 import 'package:go_router/go_router.dart';
-import 'package:flutter/material.dart';
 import '../../features/home/screens/home_screen.dart';
 import '../../features/product/screens/product_detail_screen.dart';
 import '../../features/cart/screens/cart_screen.dart';
@@ -18,7 +17,7 @@ class AppRouter {
         name: 'home',
         builder: (context, state) => const HomeScreen(),
       ),
-      
+
       /// Product detail route with product parameter
       GoRoute(
         path: '/product/:id',
@@ -32,14 +31,14 @@ class AppRouter {
           );
         },
       ),
-      
+
       /// Shopping cart route
       GoRoute(
         path: '/cart',
         name: 'cart',
         builder: (context, state) => const CartScreen(),
       ),
-      
+
       /// Checkout route
       GoRoute(
         path: '/checkout',

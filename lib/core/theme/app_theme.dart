@@ -5,8 +5,11 @@ import 'package:flutter/material.dart';
 class AppTheme {
   // Color scheme constants
   static const Color _primaryColor = Color(0xFF6750A4);
+  // ignore: unused_field
   static const Color _secondaryColor = Color(0xFF625B71);
+  // ignore: unused_field
   static const Color _surfaceColor = Color(0xFFFFFBFE);
+  // ignore: unused_field
   static const Color _errorColor = Color(0xFFBA1A1A);
 
   /// Light theme configuration
@@ -17,19 +20,19 @@ class AppTheme {
         seedColor: _primaryColor,
         brightness: Brightness.light,
       ),
-      
+
       /// Card theme for product cards and other elevated surfaces
-      cardTheme: const CardTheme(
+      cardTheme: const CardThemeData(
         elevation: 2,
         margin: EdgeInsets.all(8),
       ),
-      
+
       /// App bar theme for consistent header styling
       appBarTheme: const AppBarTheme(
         centerTitle: true,
         elevation: 0,
       ),
-      
+
       /// Elevated button theme for primary actions
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
@@ -39,7 +42,7 @@ class AppTheme {
           ),
         ),
       ),
-      
+
       /// Input decoration theme for form fields
       inputDecorationTheme: InputDecorationTheme(
         border: OutlineInputBorder(
@@ -61,17 +64,14 @@ class AppTheme {
         seedColor: _primaryColor,
         brightness: Brightness.dark,
       ),
-      
-      cardTheme: const CardTheme(
+      cardTheme: const CardThemeData(
         elevation: 2,
         margin: EdgeInsets.all(8),
       ),
-      
       appBarTheme: const AppBarTheme(
         centerTitle: true,
         elevation: 0,
       ),
-      
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           minimumSize: const Size(120, 48),
@@ -80,7 +80,6 @@ class AppTheme {
           ),
         ),
       ),
-      
       inputDecorationTheme: InputDecorationTheme(
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),

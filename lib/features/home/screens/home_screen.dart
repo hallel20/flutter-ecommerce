@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter/rendering.dart';
 import '../../../data/products.dart';
 import '../../../shared/widgets/product_card.dart';
 import '../../../shared/models/product.dart';
@@ -14,7 +15,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final products = ProductData.getAllProducts();
-    
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('E-commerce Store'),
@@ -29,6 +30,7 @@ class HomeScreen extends StatelessWidget {
                     icon: const Icon(Icons.shopping_cart_outlined),
                     tooltip: 'View cart',
                   ),
+
                   /// Item count badge
                   if (cartProvider.itemCount > 0)
                     Positioned(
@@ -62,7 +64,6 @@ class HomeScreen extends StatelessWidget {
           const SizedBox(width: 8),
         ],
       ),
-      
       body: _buildProductGrid(context, products),
     );
   }
@@ -82,27 +83,27 @@ class HomeScreen extends StatelessWidget {
                 Text(
                   'Welcome to our Store',
                   style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                        fontWeight: FontWeight.bold,
+                      ),
                 ),
                 const SizedBox(height: 8),
                 Text(
                   'Discover amazing products at great prices',
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  ),
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
                 ),
                 const SizedBox(height: 16),
               ],
             ),
           ),
         ),
-        
+
         /// Product grid
         SliverPadding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           sliver: SliverGrid(
-            gridDelegate: SliverGridDelegateWithResponsiveColumns(
+            gridDelegate: const SliverGridDelegateWithResponsiveColumns(
               crossAxisSpacing: 16,
               mainAxisSpacing: 16,
               childAspectRatio: 0.75, // Height is 1.33x width
@@ -115,7 +116,7 @@ class HomeScreen extends StatelessWidget {
             ),
           ),
         ),
-        
+
         /// Bottom padding for better scrolling experience
         const SliverToBoxAdapter(
           child: SizedBox(height: 32),
@@ -143,7 +144,7 @@ class SliverGridDelegateWithResponsiveColumns extends SliverGridDelegate {
     /// Calculate number of columns based on screen width
     final screenWidth = constraints.crossAxisExtent;
     int crossAxisCount;
-    
+
     if (screenWidth > 1200) {
       crossAxisCount = 4; // Desktop: 4 columns
     } else if (screenWidth > 800) {
