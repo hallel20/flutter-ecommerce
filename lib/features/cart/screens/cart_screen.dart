@@ -115,6 +115,7 @@ class CartScreen extends StatelessWidget {
   }
 
   /// Build cart summary with total and checkout button
+  /// FIXED: All text now uses Flexible/Expanded to prevent overflow
   Widget _buildCartSummary(BuildContext context, CartProvider cartProvider) {
     final theme = Theme.of(context);
     
@@ -136,43 +137,65 @@ class CartScreen extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             /// Order summary
+            /// CRITICAL FIX: Wrapped columns in Flexible to handle overflow
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Total Items',
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: theme.colorScheme.onSurfaceVariant,
+                /// Left side - Total Items
+                /// Flexible allows text to shrink if needed
+                Flexible(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        'Total Items',
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
+                        maxLines: 1, // CRITICAL: Prevents overflow
+                        overflow: TextOverflow.ellipsis,
                       ),
-                    ),
-                    Text(
-                      '${cartProvider.itemCount}',
-                      style: theme.textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
+                      Text(
+                        '${cartProvider.itemCount}',
+                        style: theme.textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                        maxLines: 1, // CRITICAL: Prevents overflow
+                        overflow: TextOverflow.ellipsis,
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(
-                      'Total Price',
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: theme.colorScheme.onSurfaceVariant,
+                
+                const SizedBox(width: 16), // Space between columns
+                
+                /// Right side - Total Price
+                /// Flexible allows text to shrink if needed
+                Flexible(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        'Total Price',
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
+                        maxLines: 1, // CRITICAL: Prevents overflow
+                        overflow: TextOverflow.ellipsis,
                       ),
-                    ),
-                    Text(
-                      '\$${cartProvider.totalPrice.toStringAsFixed(2)}',
-                      style: theme.textTheme.headlineSmall?.copyWith(
-                        color: theme.colorScheme.primary,
-                        fontWeight: FontWeight.bold,
+                      Text(
+                        '\$${cartProvider.totalPrice.toStringAsFixed(2)}',
+                        style: theme.textTheme.headlineSmall?.copyWith(
+                          color: theme.colorScheme.primary,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        maxLines: 1, // CRITICAL: Prevents overflow
+                        overflow: TextOverflow.ellipsis,
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ],
             ),

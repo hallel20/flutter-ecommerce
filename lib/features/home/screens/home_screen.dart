@@ -5,9 +5,10 @@ import 'package:flutter/rendering.dart';
 import '../../../data/products.dart';
 import '../../../shared/widgets/product_card.dart';
 import '../../../shared/models/product.dart';
+import '../../auth/providers/auth_provider.dart';
 import '../../cart/providers/cart_provider.dart';
 
-/// Home screen displaying the product grid
+/// Home screen displaying the product grid with authentication integration
 /// Main entry point showing all available products
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -61,6 +62,63 @@ class HomeScreen extends StatelessWidget {
               );
             },
           ),
+          
+          /// User profile menu or login button
+          Consumer<AuthProvider>(
+            builder: (context, authProvider, child) {
+              /// If user is logged in, show profile menu
+              if (authProvider.isAuthenticated && authProvider.currentUser != null) {
+                return PopupMenuButton<String>(
+                  icon: CircleAvatar(
+                    backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+                    child: Text(
+                      authProvider.currentUser!.name[0].toUpperCase(),
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onPrimaryContainer,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  onSelected: (value) {
+                    if (value == 'profile') {
+                      _showProfileDialog(context, authProvider);
+                    } else if (value == 'logout') {
+                      _showLogoutDialog(context, authProvider);
+                    }
+                  },
+                  itemBuilder: (context) => const [
+                    PopupMenuItem(
+                      value: 'profile',
+                      child: Row(
+                        children: [
+                          Icon(Icons.person_outlined),
+                          SizedBox(width: 12),
+                          Text('Profile'),
+                        ],
+                      ),
+                    ),
+                    PopupMenuItem(
+                      value: 'logout',
+                      child: Row(
+                        children: [
+                          Icon(Icons.logout),
+                          SizedBox(width: 12),
+                          Text('Logout'),
+                        ],
+                      ),
+                    ),
+                  ],
+                );
+              }
+              
+              /// If not logged in, show login button
+              return TextButton(
+                onPressed: () => context.pushNamed('login'),
+                child: const Text('Login'),
+              );
+            },
+          ),
+          
           const SizedBox(width: 8),
         ],
       ),
@@ -73,28 +131,42 @@ class HomeScreen extends StatelessWidget {
   Widget _buildProductGrid(BuildContext context, List<Product> products) {
     return CustomScrollView(
       slivers: [
-        /// Welcome section header
+        /// Welcome section header with personalized greeting
         SliverToBoxAdapter(
           child: Padding(
             padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Welcome to our Store',
-                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
+            child: Consumer<AuthProvider>(
+              builder: (context, authProvider, child) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    /// Show personalized greeting if logged in
+                    if (authProvider.isAuthenticated && authProvider.currentUser != null)
+                      Text(
+                        'Hello, ${authProvider.currentUser!.name}!',
+                        style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
+                      )
+                    else
+                      Text(
+                        'Welcome to our Store',
+                        style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
                       ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  'Discover amazing products at great prices',
-                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurfaceVariant,
-                      ),
-                ),
-                const SizedBox(height: 16),
-              ],
+                    const SizedBox(height: 8),
+                    Text(
+                      'Discover amazing products at great prices',
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                            color: Theme.of(context).colorScheme.onSurfaceVariant,
+                          ),
+                    ),
+                    const SizedBox(height: 16),
+                  ],
+                );
+              },
             ),
           ),
         ),
@@ -122,6 +194,108 @@ class HomeScreen extends StatelessWidget {
           child: SizedBox(height: 32),
         ),
       ],
+    );
+  }
+
+  /// Show profile information dialog
+  void _showProfileDialog(BuildContext context, AuthProvider authProvider) {
+    final user = authProvider.currentUser!;
+    final theme = Theme.of(context);
+    
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Profile'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: CircleAvatar(
+                radius: 40,
+                backgroundColor: theme.colorScheme.primaryContainer,
+                child: Text(
+                  user.name[0].toUpperCase(),
+                  style: TextStyle(
+                    fontSize: 32,
+                    color: theme.colorScheme.onPrimaryContainer,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'Name',
+              style: theme.textTheme.labelSmall?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
+            Text(
+              user.name,
+              style: theme.textTheme.titleMedium,
+            ),
+            const SizedBox(height: 12),
+            Text(
+              'Email',
+              style: theme.textTheme.labelSmall?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
+            Text(
+              user.email,
+              style: theme.textTheme.titleMedium,
+            ),
+            const SizedBox(height: 12),
+            Text(
+              'Member Since',
+              style: theme.textTheme.labelSmall?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
+            Text(
+              '${user.createdAt.day}/${user.createdAt.month}/${user.createdAt.year}',
+              style: theme.textTheme.titleMedium,
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Close'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Show logout confirmation dialog
+  void _showLogoutDialog(BuildContext context, AuthProvider authProvider) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Logout'),
+        content: const Text('Are you sure you want to logout?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              authProvider.logout();
+              Navigator.of(context).pop();
+              context.goNamed('welcome');
+            },
+            child: Text(
+              'Logout',
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.error,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
